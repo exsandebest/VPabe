@@ -9,18 +9,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.core.view.MenuItemCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_events_list.*
 import yoloyoj.pub.R
 import yoloyoj.pub.models.Event
+import yoloyoj.pub.storage.Storage
 import yoloyoj.pub.ui.event.EventData
 import yoloyoj.pub.ui.event.view.EventEditActivity
-import yoloyoj.pub.web.apiClient
-import yoloyoj.pub.web.handlers.EventGetter
+import yoloyoj.pub.ui.utils.location.LocationRequestingFragment
+import yoloyoj.pub.utils.tryDefault
 
-class EventsListFragment : Fragment() {
+class EventsListFragment : LocationRequestingFragment() {
+
+    companion object {
+        const val LATLNG_DISTANCE: Double = 5.0
+    }
 
     private lateinit var eventsListViewModel: EventsListViewModel
     private lateinit var events: EventData
@@ -29,6 +33,7 @@ class EventsListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
+
         super.onCreate(savedInstanceState)
     }
 
@@ -43,12 +48,10 @@ class EventsListFragment : Fragment() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null)
-                    apiClient.getSearchedEvents(query)!!.enqueue(
-                        EventGetter {
-                            search = true
-                            loadAdapter(it)
-                        }
-                    )
+                    Storage.getEventsBySearch(query) {
+                        search = true
+                        loadAdapter(it)
+                    }
 
                 return true
             }
@@ -75,27 +78,35 @@ class EventsListFragment : Fragment() {
 
         super.onCreateOptionsMenu(menu, inflater)
     }
-
+  
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val root = inflater.inflate(R.layout.activity_events_list, container, false)
-        eventsListViewModel = ViewModelProviders.of(this).get(EventsListViewModel::class.java)
-        events = eventsListViewModel.events
-        return root
-    }
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+        ): View? {
+            val root = inflater.inflate(R.layout.activity_events_list, container, false)
+            eventsListViewModel = ViewModelProviders.of(this).get(EventsListViewModel::class.java)
+            events = eventsListViewModel.events
+            return root
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         fab.setOnClickListener {
-            startActivity(Intent(activity!!.applicationContext, EventEditActivity::class.java))
+            startActivity(
+                Intent(context, EventEditActivity::class.java)
+            )
         }
         super.onViewCreated(view, savedInstanceState)
     }
 
     override fun onStart() {
         events_container.layoutManager = LinearLayoutManager(context)
+
+        listenCurrentLocation = true
+        onCurrentLocationUpdated = {
+            if (tryDefault(eventsListViewModel.location.value == null) { it!!.distanceTo(eventsListViewModel.location.value) > 0.01 })
+                eventsListViewModel.location.value = it
+        }
 
         events.observeForever { if (!search) loadAdapter(events.value!!) }
 
@@ -109,4 +120,5 @@ class EventsListFragment : Fragment() {
             )
         } catch (e: Exception) {}
     }
+
 }

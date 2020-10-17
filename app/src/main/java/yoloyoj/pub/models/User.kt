@@ -1,14 +1,22 @@
 package yoloyoj.pub.models
 
-class User {
-    var userid: Int? = null
-    var username: String? = null
-    var telephone: String? = null
-    var avatar: String? = null
-    var status: String? = null
+public class User (
+    val name: String? = null,
+    val status: String? = null,
+    val phone: String? = null,
+    val avatar: String? = null,
+    val experience: Int? = 0
+) {
+    companion object {
+        const val AVATAR = "avatar"
+        const val NAME = "name"
+        const val PHONE = "phone"
+        const val STATUS = "status"
 
-    fun hasNulls(): Boolean =
-        listOf(
-            userid, username, telephone, avatar, status
-        ).any { it == null }
+        const val ID_ANONYMOUS_USER = "anonymous"
+    }
+
+    lateinit var id: String
+
+    constructor() : this(null)
 }

@@ -13,14 +13,14 @@
         android:id="@+id/messagesView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintBottom_toTopOf="@+id/messageSendingLayout"
         app:layout_constraintTop_toTopOf="parent"
         app:stackFromEnd="true"
         tools:itemCount="10"
         tools:listitem="@layout/item_message" />
 
     <LinearLayout
-        android:id="@+id/linearLayout3"
+        android:id="@+id/messageSendingLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -103,7 +103,7 @@
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_send_black_24dp"
                     android:theme="@style/regularFont"
-                    android:tint="@color/colorPrimaryDark"
+                    android:tint="@color/colorDarkDarkGray"
                     android:visibility="gone" />
 
 

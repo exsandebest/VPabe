@@ -1,34 +1,28 @@
 package yoloyoj.pub.ui.event.list
 
 import androidx.lifecycle.ViewModel
+import yoloyoj.pub.storage.Storage
 import yoloyoj.pub.ui.event.EventData
-import yoloyoj.pub.web.handlers.EventGetter
+import yoloyoj.pub.ui.event.MutableLocation
+import yoloyoj.pub.ui.event.list.EventsListFragment.Companion.LATLNG_DISTANCE
+import java.util.*
 
 class EventsListViewModel : ViewModel() {
-    private lateinit var eventGetter: EventGetter
-
     var events = EventData().apply {
         value = emptyList()
     }
 
+    var location = MutableLocation()
+
     init {
         loadHandlers()
-
-        eventGetter.start(
-            eventid = 0
-        )
     }
 
     private fun loadHandlers() {
-        eventGetter = EventGetter().apply {
-            eventListener = { updEvents ->
-                if (updEvents.isNotEmpty()) {
-                    events.value = updEvents
-                }
-                eventGetter.start(
-                    eventid = events.value?.map { it.eventid!! }?.maxBy { it }!!
-                )
-            }
+        Storage.observeEventsNearMutableLocation(
+            location, LATLNG_DISTANCE
+        ) { updEvents ->
+            events.value = updEvents.filter { it.date!!.toDate().after(Date()) }
         }
     }
 }

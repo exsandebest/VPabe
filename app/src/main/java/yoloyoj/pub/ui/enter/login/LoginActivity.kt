@@ -4,12 +4,16 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.telephony.PhoneNumberUtils
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthProvider
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,38 +23,25 @@ import yoloyoj.pub.MainActivity.Companion.PREFERENCES_USER
 import yoloyoj.pub.MainActivity.Companion.PREFERENCES_USERID
 import yoloyoj.pub.R
 import yoloyoj.pub.models.User
+import yoloyoj.pub.models.User.Companion.ID_ANONYMOUS_USER
+import yoloyoj.pub.storage.Storage
 import yoloyoj.pub.ui.enter.registration.RegistrationActivity
 import yoloyoj.pub.web.apiClient
-import yoloyoj.pub.web.handlers.UserGetter
+import java.util.concurrent.TimeUnit
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var userGetter: UserGetter
-
     private lateinit var auth: FirebaseAuth
+
+    private val phone: String
+        get() = editTextPhone.text.toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         auth = FirebaseAuth.getInstance()
-    }
-
-    override fun onStart() {
-        userGetter = UserGetter(applicationContext) {
-            if (it != null) {
-                apiClient.checkMe(editTextPhone.text.toString())!!.enqueue(object : Callback<String?> {
-                    override fun onFailure(call: Call<String?>, t: Throwable): Unit =
-                        showVerificationFailMessage()
-
-                    override fun onResponse(call: Call<String?>, response: Response<String?>): Unit =
-                        checkCode(response.body()!!, it)
-                })
-            } else
-                showWrongInputMessage()
-        }
-
-        super.onStart()
+        AuthCallback.loginActivity = this
     }
 
     public fun onClickRegister(view: View) {
@@ -58,30 +49,37 @@ class LoginActivity : AppCompatActivity() {
     }
 
     public fun onClickLogin(view: View) {
-        userGetter.start(telephone = editTextPhone.text.toString())
+        if (!PhoneNumberUtils.isGlobalPhoneNumber(phone)) {
+            showWrongInputMessage()
+            return
+        }
+
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+            phone,
+            60,
+            TimeUnit.SECONDS,
+            this,
+            AuthCallback
+        )
     }
 
-    fun checkCode(code: String, user: User) {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_enter_code, null)
-        val input = dialogView.findViewById<EditText>(R.id.input)
-        val builder = AlertDialog.Builder(this).apply {
-            setView(dialogView)
-            setCancelable(false)
-            setPositiveButton(getString(android.R.string.ok)) { dialog, id ->
-                if (input.text.toString() == code)
-                    onLoginSuccess(user)
-                else
+    public fun onClickAnonymousLogon(view: View) {
+        auth.signInAnonymously()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val user = auth.currentUser
+                    onLoginSuccess(User().apply { id = ID_ANONYMOUS_USER })
+                } else {
                     showVerificationFailMessage()
+                }
             }
-        }
-        builder.create().show()
     }
 
     @SuppressLint("ApplySharedPref")
     fun onLoginSuccess(user: User) {
         getSharedPreferences(PREFERENCES_USER, Context.MODE_PRIVATE)
             .edit().apply {
-                putInt(PREFERENCES_USERID, user.userid!!)
+                putString(PREFERENCES_USERID, user.id)
                 commit()
             }
 
@@ -95,5 +93,20 @@ class LoginActivity : AppCompatActivity() {
 
     private fun showWrongInputMessage() {
         Snackbar.make(loginButton, "Проверьте введённые данные", Snackbar.LENGTH_LONG).show()
+    }
+
+    object AuthCallback : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        lateinit var loginActivity: LoginActivity
+
+        override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+            Storage.getUser(phone = loginActivity.phone) {
+                loginActivity.onLoginSuccess(it!!)
+            }
+        }
+
+        override fun onVerificationFailed(exception: FirebaseException) {
+            loginActivity.showVerificationFailMessage()
+        }
+
     }
 }
