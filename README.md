@@ -3,7 +3,7 @@
         <img src="https://raw.githubusercontent.com/yoloroy/vpabe/master/app/src/main/res/mipmap-xxhdpi/ic_launcher.png"/>
     </a>
 </p>
-<h1 align="center">vPabe</h1>
+<h1 align="center"><a href="https://vk.cc/axqSOv">vPabe</a></h1>
 <p align="center"><b>Mobile application for searching and creating events</b></p>
 
 ## Features
