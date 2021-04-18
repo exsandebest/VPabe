@@ -7,14 +7,14 @@
 <p align="center"><b>Mobile application for searching and creating events</b></p>
 
 ## Features
-* Sign in and sign up via SMS
-* Profile with your visited and upcoming events
+* Sign in and sign up via **SMS**
+* Profile with your visited and **upcoming events**
 * Editing profile
-* Creating and editing events
-* Searching events by map and keywords
-* Chat for every event
-* Selecting event address by map
-* Ability to attach photos to events and messages in chats
+* **Creating** and editing **events**
+* Searching events **by map** and keywords
+* Chat for **every** event
+* Selecting event address **by map**
+* Ability to **attach photos** to events and messages in chats
 
 ## Examples
 Searching events by map | Searching events by words
