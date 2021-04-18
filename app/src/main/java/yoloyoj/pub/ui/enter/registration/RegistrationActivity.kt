@@ -17,20 +17,14 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firestore.v1.UpdateDocumentRequest
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_registration.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import yoloyoj.pub.MainActivity
 import yoloyoj.pub.MainActivity.Companion.PREFERENCES_USER
 import yoloyoj.pub.MainActivity.Companion.PREFERENCES_USERID
 import yoloyoj.pub.R
 import yoloyoj.pub.storage.Storage
-import yoloyoj.pub.ui.enter.login.LoginActivity
-import yoloyoj.pub.web.apiClient
 import yoloyoj.pub.web.utils.CODE_GET_PICTURE
 import yoloyoj.pub.web.utils.chooseImage
 import yoloyoj.pub.web.utils.putImage
@@ -43,16 +37,16 @@ val REGISTERED_FAIL = null
 class RegistrationActivity : AppCompatActivity() {
 
     private val name: String
-    get() = nameEdit.text.toString()
+        get() = nameEdit.text.toString()
 
     private val phone: String
-    get() = phoneEdit.text.toString()
+        get() = phoneEdit.text.toString()
 
     private val email: String
-    get() = emailEdit.text.toString()
+        get() = emailEdit.text.toString()
 
     private val password: String
-    get() = passwordEdit.text.toString()
+        get() = passwordEdit.text.toString()
 
     private var avatar: String = ""
 
@@ -98,7 +92,6 @@ class RegistrationActivity : AppCompatActivity() {
                         val profileUpdates = UserProfileChangeRequest.Builder().apply {
                             displayName = name
                             photoUri = Uri.parse(avatar)
-
                         }
                         user!!
                     }
@@ -120,7 +113,8 @@ class RegistrationActivity : AppCompatActivity() {
         registerFailBanner.visibility = View.GONE
     }
 
-    public fun onAvatarChoose(view: View) = chooseImage()
+    public fun onAvatarChoose(view: View): Unit =
+        chooseImage()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -195,6 +189,5 @@ class RegistrationActivity : AppCompatActivity() {
         override fun onVerificationFailed(exception: FirebaseException) {
             registrationActivity.showVerificationFailMessage()
         }
-
     }
 }

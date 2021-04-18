@@ -11,8 +11,11 @@ class ChatListViewModel : ViewModel() {
     }
 
     fun start(userid: String) {
-        Storage.observeChatList(userid, handler = { updChats ->
-            chats.value = updChats
-        })
+        Storage.observeChatList(
+            userid,
+            handler = { updChats ->
+                chats.value = updChats
+            }
+        )
     }
 }

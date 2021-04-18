@@ -7,7 +7,7 @@ import yoloyoj.pub.storage.Handler
 import yoloyoj.pub.storage.Storage
 import yoloyoj.pub.utils.tryDefault
 
-public data class Event (
+public data class Event(
     val author: DocumentReference? = null,
     val avatar: String? = null,
     val name: String? = null,
@@ -41,7 +41,7 @@ public data class Event (
     }
 
     val lastMessage: Message
-        get() = tryDefault(null) { messages?.last() }?: Message(author, description)
+        get() = tryDefault(null) { messages?.last() } ?: Message(author, description)
 
     val javaDate: java.util.Date? get() = date?.toDate()
 

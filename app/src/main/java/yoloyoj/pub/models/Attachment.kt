@@ -2,7 +2,7 @@ package yoloyoj.pub.models
 
 const val TYPE_IMAGE = "image"
 
-public class Attachment (
+public class Attachment(
     val type: String? = null,
     val link: String? = null
 ) {

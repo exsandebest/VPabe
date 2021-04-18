@@ -6,8 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.telephony.PhoneNumberUtils
 import android.view.View
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.FirebaseException
@@ -15,9 +13,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import kotlinx.android.synthetic.main.activity_login.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import yoloyoj.pub.MainActivity
 import yoloyoj.pub.MainActivity.Companion.PREFERENCES_USER
 import yoloyoj.pub.MainActivity.Companion.PREFERENCES_USERID
@@ -26,7 +21,6 @@ import yoloyoj.pub.models.User
 import yoloyoj.pub.models.User.Companion.ID_ANONYMOUS_USER
 import yoloyoj.pub.storage.Storage
 import yoloyoj.pub.ui.enter.registration.RegistrationActivity
-import yoloyoj.pub.web.apiClient
 import java.util.concurrent.TimeUnit
 
 class LoginActivity : AppCompatActivity() {
@@ -107,6 +101,5 @@ class LoginActivity : AppCompatActivity() {
         override fun onVerificationFailed(exception: FirebaseException) {
             loginActivity.showVerificationFailMessage()
         }
-
     }
 }

@@ -14,7 +14,6 @@ import yoloyoj.pub.MainActivity.Companion.PREFERENCES_USER
 import yoloyoj.pub.MainActivity.Companion.PREFERENCES_USERID
 import yoloyoj.pub.R
 import yoloyoj.pub.models.Event
-import yoloyoj.pub.models.User.Companion.ID_ANONYMOUS_USER
 
 class ChatListFragment : Fragment() {
     private lateinit var viewModel: ChatListViewModel

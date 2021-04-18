@@ -78,17 +78,17 @@ class EventsListFragment : LocationRequestingFragment() {
 
         super.onCreateOptionsMenu(menu, inflater)
     }
-  
+
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-        ): View? {
-            val root = inflater.inflate(R.layout.activity_events_list, container, false)
-            eventsListViewModel = ViewModelProviders.of(this).get(EventsListViewModel::class.java)
-            events = eventsListViewModel.events
-            return root
-        }
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val root = inflater.inflate(R.layout.activity_events_list, container, false)
+        eventsListViewModel = ViewModelProviders.of(this).get(EventsListViewModel::class.java)
+        events = eventsListViewModel.events
+        return root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         fab.setOnClickListener {
@@ -120,5 +120,4 @@ class EventsListFragment : LocationRequestingFragment() {
             )
         } catch (e: Exception) {}
     }
-
 }

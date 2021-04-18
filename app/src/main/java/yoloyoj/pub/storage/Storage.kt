@@ -16,7 +16,8 @@ import yoloyoj.pub.models.Message
 import yoloyoj.pub.models.User
 import yoloyoj.pub.ui.event.MutableLocation
 import yoloyoj.pub.utils.tryDefault
-import java.util.*
+import java.util.Locale
+import kotlin.collections.HashMap
 
 typealias Handler<T> = (T) -> Unit
 
@@ -42,7 +43,7 @@ class Storage { // TODO: divide?
             if ((userid != "0") or (phone != "")) {
                 var temp = phone
                 if (temp.startsWith('+')) {
-                    temp = "${temp[1].toString().toInt()+1}${temp.slice(2 until temp.length)}"
+                    temp = "${temp[1].toString().toInt() + 1}${temp.slice(2 until temp.length)}"
                 }
 
                 // TODO: divide?
@@ -84,9 +85,8 @@ class Storage { // TODO: divide?
         ) {
             var temp = phone
             if (temp.startsWith('+')) {
-                temp = "${temp[1].toString().toInt()+1}${temp.slice(2 until temp.length)}"
+                temp = "${temp[1].toString().toInt() + 1}${temp.slice(2 until temp.length)}"
             }
-
 
             val userMap: HashMap<String, Any> = User.run {
                 hashMapOf(
@@ -129,12 +129,14 @@ class Storage { // TODO: divide?
         fun observeAllEvents(handler: Handler<List<Event>>) {
             events
                 .addSnapshotListener { value, _ ->
-                    handler(value!!.map {
-                        it.toObject(Event::class.java)
-                            .apply {
-                                id = it.id
-                            }
-                    })
+                    handler(
+                        value!!.map {
+                            it.toObject(Event::class.java)
+                                .apply {
+                                    id = it.id
+                                }
+                        }
+                    )
                 }
         }
 
@@ -162,12 +164,14 @@ class Storage { // TODO: divide?
                     Distance(distance, BoundingBoxUtils.DistanceUnit.KILOMETERS)
                 )
                 .addSnapshotListener { _, value, _ ->
-                    handler(value.map {
-                        it.toEvent()!!
-                            .apply {
-                                id = it.id
-                            }
-                    })
+                    handler(
+                        value.map {
+                            it.toEvent()!!
+                                .apply {
+                                    id = it.id
+                                }
+                        }
+                    )
                 }
         }
 
@@ -186,7 +190,9 @@ class Storage { // TODO: divide?
                             }
                             .filter {
                                 (query.toLowerCase(Locale.ROOT) in it.name!!.toLowerCase(Locale.ROOT)) or
-                                (query.toLowerCase(Locale.ROOT) in (it.description?: "").toLowerCase(Locale.ROOT))
+                                    (
+                                        query.toLowerCase(Locale.ROOT) in (it.description ?: "").toLowerCase(Locale.ROOT)
+                                        )
                             }
                     )
                 }
@@ -197,12 +203,14 @@ class Storage { // TODO: divide?
                 .whereArrayContains(SUBSCRIBERS, users.document(userid))
                 .get()
                 .addOnSuccessListener { snapshot ->
-                    handler(snapshot.map {
-                        it.toObject(Event::class.java)
-                            .apply {
-                                id = it.id
-                            }
-                    })
+                    handler(
+                        snapshot.map {
+                            it.toObject(Event::class.java)
+                                .apply {
+                                    id = it.id
+                                }
+                        }
+                    )
                 }
         }
 
@@ -250,30 +258,30 @@ class Storage { // TODO: divide?
 
         fun updateEvent(eventid: String, event: Event, handler: Handler<Boolean>) {
             with(Event) {
-            with(event) {
-                latlng!!
-                events.document(eventid)
-                    .update(
-                        hashMapOf<String, Any?>(
-                            AUTHOR to author, // need to check possibility of update in firestore sec. rules
-                            AVATAR to avatar,
-                            NAME to name,
-                            DESCRIPTION to description,
-                            PLACE to place,
-                            LATLNG to latlng,
-                            DATE to date
+                with(event) {
+                    latlng!!
+                    events.document(eventid)
+                        .update(
+                            hashMapOf<String, Any?>(
+                                AUTHOR to author, // need to check possibility of update in firestore sec. rules
+                                AVATAR to avatar,
+                                NAME to name,
+                                DESCRIPTION to description,
+                                PLACE to place,
+                                LATLNG to latlng,
+                                DATE to date
+                            )
                         )
-                    )
-                    .addOnCompleteListener {
-                        handler(it.isSuccessful)
-
-                    }
-                events.document(eventid)
-                    .setLocation(
-                        latlng.latitude,
-                        latlng.longitude
-                    )
-            }}
+                        .addOnCompleteListener {
+                            handler(it.isSuccessful)
+                        }
+                    events.document(eventid)
+                        .setLocation(
+                            latlng.latitude,
+                            latlng.longitude
+                        )
+                }
+            }
         }
 
         fun observeChatList(
@@ -299,7 +307,7 @@ class Storage { // TODO: divide?
             handler(eventid)
         }
 
-        fun checkIsUserInChat(userid: String, chatid: String, handler: Handler<Boolean>) =
+        fun checkIsUserInChat(userid: String, chatid: String, handler: Handler<Boolean>): Unit =
             checkIsUserSubscribed(userid, chatid, handler) // TODO
 
         fun checkIsUserSubscribed(userid: String, eventid: String, handler: Handler<Boolean>) {
@@ -307,7 +315,7 @@ class Storage { // TODO: divide?
                 .get()
                 .addOnSuccessListener {
                     handler(
-                        users.document(userid) in it.toObject(Event::class.java)!!.subscribers?: emptyList()
+                        users.document(userid) in it.toObject(Event::class.java)!!.subscribers ?: emptyList()
                     )
                 }
         }
@@ -381,18 +389,21 @@ class Storage { // TODO: divide?
         }
 
         fun observeMessages(
-            chatid: String, after: Int, handler: Handler<List<Message>>
+            chatid: String,
+            after: Int,
+            handler: Handler<List<Message>>
         ) {
             // subscribers geting here use for not calling for them every message
             getChatSubscribers(chatid) { subs ->
                 events.document(chatid).addSnapshotListener { snapshot, _ ->
                     val event = snapshot!!.toObject(Event::class.java)!!
-                    handler(event.messages!!
-                        .map {
-                            it.apply {
-                                _sender = subs[it.sender!!.id]
+                    handler(
+                        event.messages!!
+                            .map {
+                                it.apply {
+                                    _sender = subs[it.sender!!.id]
+                                }
                             }
-                        }
                     )
                 }
             }

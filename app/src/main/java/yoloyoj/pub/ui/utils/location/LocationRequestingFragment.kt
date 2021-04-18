@@ -64,9 +64,9 @@ open class LocationRequestingFragment : Fragment() {
             != PackageManager.PERMISSION_GRANTED
         ) { // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    activity!!,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
+                activity!!,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
             ) {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
@@ -100,8 +100,7 @@ open class LocationRequestingFragment : Fragment() {
                     MY_PERMISSIONS_REQUEST_LOCATION
                 )
             }
-        }
-        else
+        } else
             this.onLocationPermissionAllowed.forEach { it() }
     }
 
@@ -115,7 +114,7 @@ open class LocationRequestingFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        listenCurrentLocation = savedInstanceState?.getBoolean(LISTEN_CURRENT_LOCATION, false)?: false
+        listenCurrentLocation = savedInstanceState?.getBoolean(LISTEN_CURRENT_LOCATION, false) ?: false
         currentLocation = savedInstanceState?.getParcelable(CURRENT_LOCATION)
     }
 
@@ -133,9 +132,9 @@ open class LocationRequestingFragment : Fragment() {
                     // permission was granted, yay! Do the
                     // location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(
-                            context!!,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                        )
+                        context!!,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    )
                         == PackageManager.PERMISSION_GRANTED
                     ) {
                         onLocationPermissionAllowed.forEach { it() }
@@ -158,7 +157,5 @@ open class LocationRequestingFragment : Fragment() {
         override fun onProviderEnabled(provider: String?) {}
 
         override fun onProviderDisabled(provider: String?) {}
-
     }
-
 }

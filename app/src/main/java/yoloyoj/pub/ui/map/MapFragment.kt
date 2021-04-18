@@ -141,9 +141,9 @@ open class MapFragment :
         mLocationRequest.fastestInterval = 1000
         mLocationRequest.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
         if (ContextCompat.checkSelfPermission(
-                context!!,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
+            context!!,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
             == PackageManager.PERMISSION_GRANTED
         ) {
             LocationServices.FusedLocationApi.requestLocationUpdates(
@@ -174,8 +174,8 @@ open class MapFragment :
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
         mCurrLocationMarker = googleMap.addMarker(markerOptions)
 
-        if ((tempLocation?.distanceTo(location)?: 10.1f) > 10) {
-            if (tempLocation == null) {// move camera only for first time
+        if ((tempLocation?.distanceTo(location) ?: 10.1f) > 10) {
+            if (tempLocation == null) { // move camera only for first time
                 googleMap.animateCamera(
                     CameraUpdateFactory.newLatLngZoom(
                         latLng, 12.0f
@@ -191,15 +191,15 @@ open class MapFragment :
     private val MY_PERMISSIONS_REQUEST_LOCATION = 99
     private fun checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(
-                context!!,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
+            context!!,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
             != PackageManager.PERMISSION_GRANTED
         ) { // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    activity!!,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
+                activity!!,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
             ) {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
@@ -251,9 +251,9 @@ open class MapFragment :
                     // permission was granted, yay! Do the
                     // location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(
-                            context!!,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                        )
+                        context!!,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    )
                         == PackageManager.PERMISSION_GRANTED
                     ) {
                         onLocationPermissionAllowed()

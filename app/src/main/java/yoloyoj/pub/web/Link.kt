@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
- interface Link {
+interface Link {
 
     @GET("http://dev.virtualearth.net/REST/v1/Locations/{location}")
     fun getAddress(

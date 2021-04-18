@@ -16,7 +16,7 @@ import yoloyoj.pub.ui.enter.login.LoginActivity
 import yoloyoj.pub.ui.event.view.STANDARD_EVENT_IMAGE
 import yoloyoj.pub.ui.profile.fragment.STANDARD_PROFILE_IMAGE
 
-class ProfileActivity: AppCompatActivity() {
+class ProfileActivity : AppCompatActivity() {
 
     private var selfUserId: String? = "0" // me
     private var profileUserId: String = "0" // other user
@@ -30,7 +30,7 @@ class ProfileActivity: AppCompatActivity() {
 
         selfUserId = getSharedPreferences(PREFERENCES_USER, Context.MODE_PRIVATE)
             ?.getString(PREFERENCES_USERID, "1")
-        if (selfUserId == null || selfUserId == "0"){
+        if (selfUserId == null || selfUserId == "0") {
             startActivity(Intent(applicationContext, LoginActivity::class.java))
             finish()
             return
@@ -57,24 +57,26 @@ class ProfileActivity: AppCompatActivity() {
             val upcomingEvents = emptyList<ProfileEventItemActivity>().toMutableList()
             val visitedEvents = emptyList<ProfileEventItemActivity>().toMutableList()
             val curDate = DateTime.now().unixMillisLong
-            for (e in events){
-                val eventDate = e.date!!.seconds/1000
+            for (e in events) {
+                val eventDate = e.date!!.seconds / 1000
                 var imageLink = STANDARD_EVENT_IMAGE
                 if (!e.avatar.isNullOrEmpty()) {
                     imageLink = e.avatar
                 }
 
-                (if (eventDate >= curDate)
-                    upcomingEvents
-                else
-                    visitedEvents)
-                .add(
-                    ProfileEventItemActivity(
-                        eventName = e.name!!,
-                        eventId = e.id,
-                        eventImageLink = imageLink
+                (
+                    if (eventDate >= curDate)
+                        upcomingEvents
+                    else
+                        visitedEvents
                     )
-                )
+                    .add(
+                        ProfileEventItemActivity(
+                            eventName = e.name!!,
+                            eventId = e.id,
+                            eventImageLink = imageLink
+                        )
+                    )
             }
             recyclerUpcomingEventsActivity.adapter = ProfileEventsAdapterActivity(
                 upcomingEvents.reversed()

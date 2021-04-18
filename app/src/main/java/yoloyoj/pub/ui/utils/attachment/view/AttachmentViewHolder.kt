@@ -20,7 +20,7 @@ import yoloyoj.pub.utils.tryDefault
 open class AttachmentViewHolder(open val view: ImageView) : RecyclerView.ViewHolder(view) {
 
     open fun bind(attachment: Attachment) {
-        when(attachment.type) {
+        when (attachment.type) {
             TYPE_IMAGE -> bindImage(attachment)
             else -> {
                 view.setOnClickListener { TODO("Download and open something") }
@@ -69,8 +69,8 @@ open class AttachmentViewHolder(open val view: ImageView) : RecyclerView.ViewHol
             .load(attachment.link!!)
             .setDownloadPath(
                 root.absolutePath +
-                        "/download/" +
-                        attachment.link.split("/").last() // file name
+                    "/download/" +
+                    attachment.link.split("/").last() // file name
             )
             .start()
     }

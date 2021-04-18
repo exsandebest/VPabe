@@ -1,6 +1,6 @@
 package yoloyoj.pub.models
 
-public class User (
+public class User(
     val name: String? = null,
     val status: String? = null,
     val phone: String? = null,

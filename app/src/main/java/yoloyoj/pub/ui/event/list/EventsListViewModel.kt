@@ -5,7 +5,7 @@ import yoloyoj.pub.storage.Storage
 import yoloyoj.pub.ui.event.EventData
 import yoloyoj.pub.ui.event.MutableLocation
 import yoloyoj.pub.ui.event.list.EventsListFragment.Companion.LATLNG_DISTANCE
-import java.util.*
+import java.util.Date
 
 class EventsListViewModel : ViewModel() {
     var events = EventData().apply {

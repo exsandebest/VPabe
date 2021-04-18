@@ -21,7 +21,7 @@ import yoloyoj.pub.web.utils.CODE_GET_PICTURE
 import yoloyoj.pub.web.utils.chooseImage
 import yoloyoj.pub.web.utils.putImage
 
-class EditProfileFragment: Fragment() {
+class EditProfileFragment : Fragment() {
 
     private var avatarLink = ""
 
@@ -33,7 +33,7 @@ class EditProfileFragment: Fragment() {
             ?.getSharedPreferences(PREFERENCES_USER, Context.MODE_PRIVATE)
             ?.getString(PREFERENCES_USERID, "1")
 
-        if (userId == null || userId == "0"){
+        if (userId == null || userId == "0") {
             startActivity(Intent(context, LoginActivity::class.java))
             activity?.finish()
         }

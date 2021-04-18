@@ -38,7 +38,7 @@ class EventActivity : AppCompatActivity() {
         userId = getSharedPreferences(MainActivity.PREFERENCES_USER, Context.MODE_PRIVATE)
             ?.getString(MainActivity.PREFERENCES_USERID, "1")
 
-        if (userId == null || userId == "0"){
+        if (userId == null || userId == "0") {
             startActivity(Intent(applicationContext, LoginActivity::class.java))
             finish()
         }
@@ -142,10 +142,3 @@ class EventActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 }
-
-
-
-
-
-
-

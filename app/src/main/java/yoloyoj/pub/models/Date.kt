@@ -14,14 +14,13 @@ class Date(
 ) {
 
     val time: String
-        get() = timeToString(hour?:0, minute?:0)
+        get() = timeToString(hour ?: 0, minute ?: 0)
 
     val date: String
-        get() = dateToString(day?:0, month?:0, (year?:0)%100)
+        get() = dateToString(day ?: 0, month ?: 0, (year ?: 0) % 100)
 
-    override fun toString(): String {
-        return "$date $time"
-    }
+    override fun toString(): String =
+        "$date $time"
 
     val javaDate: JDate get() =
         tryDefault(JDate()) {

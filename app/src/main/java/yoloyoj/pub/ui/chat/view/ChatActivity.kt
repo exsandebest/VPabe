@@ -40,9 +40,9 @@ class ChatActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (data != null)
-        when (requestCode) {
-            CODE_GET_PICTURE -> putImage(data.data!!) { onImagePutted(it) }
-        }
+            when (requestCode) {
+                CODE_GET_PICTURE -> putImage(data.data!!) { onImagePutted(it) }
+            }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +55,7 @@ class ChatActivity : AppCompatActivity() {
             .getString(MainActivity.PREFERENCES_USERID, "0")!!
 
         if (userid == ID_ANONYMOUS_USER) {
-            //messageSendingLayout.visibility = View.GONE
+            // messageSendingLayout.visibility = View.GONE
             // return  // TODO: return returning
         }
 
@@ -125,7 +125,6 @@ class ChatActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
         })
     }
 
@@ -162,13 +161,16 @@ class ChatActivity : AppCompatActivity() {
     }
 
     @Suppress("UNUSED_PARAMETER")
-    fun addAttachment(view: View) = chooseImage()
+    fun addAttachment(view: View): Unit =
+        chooseImage()
 
     private fun onImagePutted(link: String) {
-        attachments.value = (attachments.value!! + Attachment(
-            "image",
-            link
-        )).toMutableList()
+        attachments.value = (
+            attachments.value!! + Attachment(
+                "image",
+                link
+            )
+            ).toMutableList()
 
         (attachmentsPreView.adapter as AttachmentPreviewAdapter).apply {
             items = attachments // temporary

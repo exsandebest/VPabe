@@ -23,12 +23,12 @@ import yoloyoj.pub.utils.timeToString
 import yoloyoj.pub.web.utils.CODE_GET_PICTURE
 import yoloyoj.pub.web.utils.chooseImage
 import yoloyoj.pub.web.utils.putImage
-import java.util.*
+import java.util.Calendar
 import yoloyoj.pub.models.Event as FEvent
 
 const val LOCATION_REQUEST_CODE = 127
 
-class EventEditActivity: AppCompatActivity() {
+class EventEditActivity : AppCompatActivity() {
 
     private var eventImageLink = STANDARD_EVENT_IMAGE
     private var eYear: Int = 0
@@ -48,7 +48,7 @@ class EventEditActivity: AppCompatActivity() {
             avatar = eventImageLink,
             name = event_header_edit.text.toString(),
             description = event_describe_header_edit.text.toString(),
-            place = ePlace?:"",
+            place = ePlace ?: "",
             latlng = GeoPoint(eLat!!, eLng!!),
             date = Timestamp(
                 Date(
@@ -76,7 +76,8 @@ class EventEditActivity: AppCompatActivity() {
     }
 
     @Suppress("UNUSED_PARAMETER")
-    fun addAttachment() = chooseImage()
+    fun addAttachment(): Unit =
+        chooseImage()
 
     private fun onImagePutted(link: String) {
         Picasso.get().load(link).into(event_image)
@@ -89,7 +90,7 @@ class EventEditActivity: AppCompatActivity() {
 
         userId = getSharedPreferences(MainActivity.PREFERENCES_USER, Context.MODE_PRIVATE)
             ?.getString(MainActivity.PREFERENCES_USERID, "1")
-        if (userId == null || userId == "0"){
+        if (userId == null || userId == "0") {
             startActivity(Intent(applicationContext, LoginActivity::class.java))
             finish()
         }
@@ -100,7 +101,7 @@ class EventEditActivity: AppCompatActivity() {
             Storage.getEvent(eventId!!) {
                 event_header_edit.setText(it.name)
                 event_describe_header_edit.setText(it.description)
-                with(it.javaDate?:java.util.Date()) {
+                with(it.javaDate ?: java.util.Date()) {
                     eYear = year
                     eMonth = month
                     eDay = day
@@ -118,7 +119,7 @@ class EventEditActivity: AppCompatActivity() {
                     Picasso.get().load(it.avatar).into(event_image)
                     eventImageLink = it.avatar
                 }
-                ePlace = it.place ?:""
+                ePlace = it.place ?: ""
                 with(it.latlng!!) {
                     eLat = latitude
                     eLng = longitude
@@ -133,8 +134,6 @@ class EventEditActivity: AppCompatActivity() {
             supportActionBar?.title = getString(R.string.title_create_event)
         }
 
-
-
         event_image.setOnClickListener { addAttachment() }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
@@ -143,12 +142,14 @@ class EventEditActivity: AppCompatActivity() {
         val c = Calendar.getInstance()
 
         pickDateBtn.setOnClickListener {
-            val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                eYear = year
-                eMonth = monthOfYear + 1
-                eDay = dayOfMonth
-                tvDate.text = dateToString(eDay, eMonth, eYear)
-            },
+            val dpd = DatePickerDialog(
+                this,
+                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                    eYear = year
+                    eMonth = monthOfYear + 1
+                    eDay = dayOfMonth
+                    tvDate.text = dateToString(eDay, eMonth, eYear)
+                },
                 c.get(Calendar.YEAR),
                 c.get(Calendar.MONTH),
                 c.get(Calendar.DAY_OF_MONTH)
@@ -157,11 +158,13 @@ class EventEditActivity: AppCompatActivity() {
         }
 
         pickTimeBtn.setOnClickListener {
-            val tpd = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { view, hour, minute ->
-                eHour = hour
-                eMinute = minute
-                tvTime.text = timeToString(eHour, eMinute)
-            },
+            val tpd = TimePickerDialog(
+                this,
+                TimePickerDialog.OnTimeSetListener { view, hour, minute ->
+                    eHour = hour
+                    eMinute = minute
+                    tvTime.text = timeToString(eHour, eMinute)
+                },
                 c.get(Calendar.HOUR_OF_DAY),
                 c.get(Calendar.MINUTE),
                 true
@@ -171,7 +174,8 @@ class EventEditActivity: AppCompatActivity() {
 
         getLocationButton.setOnClickListener {
             val intent = Intent(this, LocationGetterActivity::class.java)
-            startActivityForResult(intent,
+            startActivityForResult(
+                intent,
                 LOCATION_REQUEST_CODE
             )
         }

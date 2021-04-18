@@ -27,14 +27,17 @@ class LoadingActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance().currentUser
         val userid = getSharedPreferences(PREFERENCES_USER, Context.MODE_PRIVATE).getString(PREFERENCES_USERID, null)
 
-        Handler().postDelayed({
-            if ((auth == null) or userid.isNullOrEmpty()) {
-                startActivity(Intent(this@LoadingActivity, LoginActivity::class.java))
-                finish()
-            } else {
-                startActivity(Intent(this@LoadingActivity, MainActivity::class.java))
-                finish()
-            }
-        }, TIME_MILLIS_SHOW_LOADING)
+        Handler().postDelayed(
+            {
+                if ((auth == null) or userid.isNullOrEmpty()) {
+                    startActivity(Intent(this@LoadingActivity, LoginActivity::class.java))
+                    finish()
+                } else {
+                    startActivity(Intent(this@LoadingActivity, MainActivity::class.java))
+                    finish()
+                }
+            },
+            TIME_MILLIS_SHOW_LOADING
+        )
     }
 }

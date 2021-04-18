@@ -21,7 +21,7 @@ import yoloyoj.pub.models.User.Companion.ID_ANONYMOUS_USER
 import yoloyoj.pub.storage.Storage
 import yoloyoj.pub.ui.enter.login.LoginActivity
 import yoloyoj.pub.ui.event.view.STANDARD_EVENT_IMAGE
-import java.util.*
+import java.util.Date
 
 const val STANDARD_PROFILE_IMAGE = "https://alpinism-industrial.ru/wp-content/uploads/2019/09/kisspng-user-profile-computer-icons-clip-art-profile-5ac092f6f2d337.1560498715225699749946-300x300.jpg"
 const val ANONYMOUS_PROFILE_IMAGE = "https://i.ytimg.com/vi/F4rv4gNoaEk/sddefault.jpg"
@@ -62,7 +62,6 @@ class ProfileFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_profile, container, false)
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerUpcomingEvents.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -128,15 +127,12 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun fixImageLink(imageLink: String?): String {
-        return if (imageLink.isNullOrEmpty())
-            STANDARD_EVENT_IMAGE
-        else
-            imageLink
-    }
+    private fun fixImageLink(imageLink: String?): String =
+        if (imageLink.isNullOrEmpty()) STANDARD_EVENT_IMAGE
+        else imageLink
 
     val Event.millisDate: Long
-        get() = date!!.seconds/1000
+        get() = date!!.seconds / 1000
 
     private fun goLogin() {
         startActivity(Intent(context, LoginActivity::class.java))
